@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VideoRepository extends CrudRepository<Video, ObjectId> {
+    Video findByName(String name);
 }

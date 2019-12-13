@@ -5,6 +5,7 @@ import com.dsproject.vms.model.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -15,5 +16,10 @@ public class UserController {
     @PostMapping("/register")
     public @ResponseBody User createUser(@RequestBody User user) {
         return repo.save(user);
+    }
+    @GetMapping("/")
+    public @ResponseBody
+    Iterable<User> getUsers() {
+        return repo.findAll();
     }
 }

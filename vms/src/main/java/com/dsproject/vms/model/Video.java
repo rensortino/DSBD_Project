@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,6 +16,7 @@ public class Video {
     @Id
     private ObjectId _id;
     @NotNull
+    @Indexed(unique=true)
     private String name;
     @NotNull
     private String author_name;
@@ -63,5 +65,6 @@ public class Video {
 
     public void setAuthor(User author) {
         this.author = author;
+        this.author_name = author.getName();
     }
 }

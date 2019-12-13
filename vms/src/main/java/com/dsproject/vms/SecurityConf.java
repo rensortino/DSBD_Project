@@ -32,10 +32,10 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/users/register").permitAll()
-                //.antMatchers("/users/all").hasAuthority("ADMIN")
-                //.antMatchers(HttpMethod.DELETE, "/user/{id}").hasAuthority("ADMIN")
-                //.antMatchers("/user/{email}").hasAnyAuthority("ADMIN,USER")
-                .anyRequest().authenticated()
+                .antMatchers("/users/").authenticated()
+                .antMatchers(HttpMethod.POST,"/videos/").authenticated()
+                // DA MODIFICARE
+                .anyRequest().permitAll()
                 .and()
                 .csrf().disable();
 

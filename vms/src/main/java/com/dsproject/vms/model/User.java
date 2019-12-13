@@ -16,6 +16,7 @@ public class User {
     private ObjectId _id;
     @NotNull
     private String name;
+    @NotNull
     @Indexed(unique=true)
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
