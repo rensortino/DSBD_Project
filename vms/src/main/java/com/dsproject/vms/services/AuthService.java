@@ -25,6 +25,8 @@ public class AuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("user"));
         User user = repository.findByEmail(email);
         if (user == null)
             throw new UsernameNotFoundException("Utente non trovato");
@@ -36,7 +38,7 @@ public class AuthService implements UserDetailsService {
                 true,
                 true,
                 true,
-                getAuth(user.getRoles())
+                authorities
         );
 
     }
