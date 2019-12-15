@@ -23,12 +23,6 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
     @Value(value = "${MONGO_HOST}")
     private String mongoHost;
 
-    @Value(value = "${MONGO_ROOT_USERNAME}")
-    private String mongoUser;
-
-    @Value(value = "${MONGO_ROOT_PASSWORD}")
-    private String mongoPass;
-
     @Value(value = "${MONGO_PORT:27017}")
     private String mongoPort;
 
