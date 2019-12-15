@@ -1,0 +1,11 @@
+/home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/ApplicationConfiguration.java
+/home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/model/UserRepository.java
+/home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/VmsApplication.java
+/home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/model/VideoRepository.java
+/home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/controller/VideoController.java
+/home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/controller/UserController.java
+/home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/model/User.java
+/home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/services/AuthService.java
+/home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/model/Video.java
+/home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/SecurityConf.java
+/home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/model/VideoWrapper.java

@@ -1,21 +1,28 @@
 package com.dsproject.vms.controller;
 
 import com.dsproject.vms.model.*;
+import net.minidev.json.JSONObject;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/videos")
 public class VideoController {
+
+  @Value(value = "${VIDEOPROCESSING_HOST}")
+  private String Videoprocessing_host;
 
     @Autowired
     VideoRepository repo;
@@ -31,7 +38,7 @@ public class VideoController {
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       // se prendo il nome dalla richiesta un utente può pubblicare video con diversi nomi
       User author = user.findByEmail(authentication.getName());
-      Video video = new Video(videowrapper.getName(),author);
+      Video video = new Video(videowrapper.getName(),author,videowrapper.getName());
       return repo.save(video);
   }
   @ResponseStatus(code = HttpStatus.BAD_REQUEST,  reason = "Name of video already taken")
@@ -51,16 +58,22 @@ public class VideoController {
       return "OK";
   }
 
-    @ResponseStatus(code = HttpStatus.NOT_FOUND,  reason = "video not found")
-    class NotExistingVideoException extends RuntimeException {
-    }
+      @ResponseStatus(code = HttpStatus.NOT_FOUND,  reason = "video not found")
+      class NotExistingVideoException extends RuntimeException {
+      }
 
     @PostMapping("/{id}")
     @ResponseBody
     String UploadVideo(@RequestParam("file") MultipartFile file, @PathVariable("id") ObjectId Video_id){
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       if (file.isEmpty() || !repo.existsById(Video_id)) {
         throw new NoVideoFileException();
       }
+      Optional<Video> video = repo.findById(Video_id);
+      if(!video.get().getAuthor().getEmail().equals(authentication.getName())){
+          throw new NoUserMatchException();
+      }
+      RestTemplate VideoProcessingRequest = new RestTemplate();
         try {
           byte[] bytes = file.getBytes();
           // Creating the directory to store file
@@ -77,12 +90,18 @@ public class VideoController {
         } catch (Exception e) {
           throw new VideoFileException();
         }
-
+        JSONObject VideoProcessingContent = new JSONObject();
+        VideoProcessingContent.put("videoId",Video_id.toString());
+        JSONObject VideoProcessingResult = VideoProcessingRequest.postForObject(Videoprocessing_host,VideoProcessingContent, JSONObject.class);
+        System.out.println(VideoProcessingResult);
         return "Video Uploaded";
 
     }
   @ResponseStatus(code = HttpStatus.BAD_REQUEST,  reason = "No video found")
   class NoVideoFileException extends RuntimeException {
+  }
+  @ResponseStatus(code = HttpStatus.BAD_REQUEST,  reason = "You are not the video's owner")
+  class NoUserMatchException extends RuntimeException {
   }
   @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR,  reason = "Error saving video")
   class VideoFileException extends RuntimeException {

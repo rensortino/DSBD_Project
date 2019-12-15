@@ -3,11 +3,11 @@ package com.dsproject.vms.model;
 public class VideoWrapper {
 
     private String name;
-    private String author;
+    private String author_name;
 
     public VideoWrapper(String name, String author) {
         this.name = name;
-        this.author = author;
+        this.author_name = author;
     }
 
     public String getName() {
@@ -19,10 +19,10 @@ public class VideoWrapper {
     }
 
     public String getAuthor() {
-        return author;
+        return author_name;
     }
 
     public void setAuthor(String author) {
-        this.author = author;
+        this.author_name = author;
     }
 }

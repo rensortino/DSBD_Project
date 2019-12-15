@@ -18,7 +18,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication(exclude = {MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
 @AutoConfigureAfter(EmbeddedMongoAutoConfiguration.class)
 public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
-    /*
+
+
     @Value(value = "${MONGO_HOST}")
     private String mongoHost;
 
@@ -33,7 +34,7 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
 
     @Value(value = "${MONGO_DBNAME}")
     private String mongoDatabase;
-    */
+
 
     public ApplicationConfiguration() {
     }
@@ -41,17 +42,16 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
     @Override
     @Bean
     public MongoClient mongoClient() {
-        /*
+
         String s = String.format("mongodb://%s:%s/%s",
                 mongoHost, mongoPort, mongoDatabase);
-         */
-        String s = String.format("mongodb://localhost:27017/vms");
+
+       // String s = String.format("mongodb://localhost:27017/vms");
         return MongoClients.create(s);
     }
 
     @Override
     protected String getDatabaseName() {
-        String mongoDatabase = "vms";
         return mongoDatabase;
     }
 }

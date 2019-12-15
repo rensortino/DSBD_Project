@@ -23,9 +23,12 @@ public class Video {
     @DBRef
     private User author;
 
+    private String status;
+
     @JsonCreator
-    public Video(String name, User author) {
+    public Video(String name, User author,String author_name) {
         this.name = name;
+        this.author_name = author_name;
         this.author = author;
     }
 
@@ -67,4 +70,14 @@ public class Video {
         this.author = author;
         this.author_name = author.getName();
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
 }
