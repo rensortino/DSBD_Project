@@ -26,6 +26,8 @@ public class VideoController {
 
   @Value(value = "${VIDEOPROCESSING_HOST}")
   private String Videoprocessing_host;
+  @Value(value = "${GATEWAY_HOST}")
+  private String Gateway_host;
 
     @Autowired
     VideoRepository repo;
@@ -61,7 +63,7 @@ public class VideoController {
           throw new NotExistingVideoException();
       }
       HttpHeaders headers = new HttpHeaders();
-      headers.setLocation(URI.create("/home/simoneonesta/DSBD_Project/storage/videofiles/video.mp4"));
+      headers.setLocation(URI.create("/videofiles/"+id.toString()+"/video.mp4"));
       return new ResponseEntity(headers, HttpStatus.MOVED_PERMANENTLY);
       //return new RedirectView("file:///processedVideos/"+ id.toString()+ "video.mpd" );
   }

@@ -8,12 +8,11 @@ services:
         links:
             - mongo
             - vps
-        ports:
-            - "8080:8080"
         environment:
             MONGO_HOST: mongo
             MONGO_DBNAME: vms
             VIDEOPROCESSING_HOST: http://vps:8080/videos/process
+            GATEWAY_HOST: http://gateway:8080
         volumes:
          - ./storage/var/video:/app/videos
          - ./storage/videofiles:/app/processedVideos
@@ -27,6 +26,16 @@ services:
         - ./storage/var/video:/app/videos:ro
         - ./storage/videofiles:/app/processedVideos
         - ./storage:/app/script
+    gateway:
+        image: apigateway
+        links: 
+            - vms
+        ports:
+            - "8080:8080"
+        environment:
+            VMS_HOST: http://vms:8080
+        volumes:
+        - ./storage/var/video:/app/var/videofiles
 volumes:
     storage:
 
