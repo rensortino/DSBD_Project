@@ -1,6 +1,5 @@
 package com.dsproject.vms.controller;
 
-import com.dsproject.vms.model.UserRepository;
 import com.dsproject.vms.model.Video;
 import com.dsproject.vms.model.VideoWrapper;
 import com.dsproject.vms.services.VideoService;
@@ -23,8 +22,6 @@ public class VideoController {
 
     @Autowired
     VideoService videoService;
-    @Autowired
-    UserRepository user;
 
     @PostMapping("/")
     @ResponseStatus(code = HttpStatus.CREATED,reason = "Video Created")

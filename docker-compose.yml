@@ -14,18 +14,21 @@ services:
             VIDEOPROCESSING_HOST: http://vps:8080/videos/process
             GATEWAY_HOST: http://gateway:8080
         volumes:
-         - ./storage/var/video:/app/videos
-         - ./storage/videofiles:/app/processedVideos
+            - ./storage/var/video:/app/videos
+            - ./storage/videofiles:/app/processedVideos
+
     mongo:
         image: mongo
         restart: always
+
     vps:
         image: vps
         restart: always
         volumes:
-        - ./storage/var/video:/app/videos:ro
-        - ./storage/videofiles:/app/processedVideos
-        - ./storage:/app/script
+            - ./storage/var/video:/app/videos:ro
+            - ./storage/videofiles:/app/processedVideos
+            - ./storage:/app/script
+
     gateway:
         image: apigateway
         links: 
@@ -35,7 +38,15 @@ services:
         environment:
             VMS_HOST: http://vms:8080
         volumes:
-        - ./storage/var/video:/app/var/videofiles
+            - ./storage/var/video:/app/var/videofiles
+
+    video_processor:
+        image: video_processor
+        ports:
+            - "5000:5000"
+        volumes:
+            - ./storage/var/video:/app/videos
+            - ./storage/videoiles:/app/processedVideos
 volumes:
     storage:
 
