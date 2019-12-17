@@ -5,7 +5,9 @@ import net.minidev.json.JSONObject;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.URI;
 import java.util.Optional;
 
 @RestController
@@ -30,6 +33,7 @@ public class VideoController {
     UserRepository user;
 
   @PostMapping("/")
+  @ResponseStatus(code = HttpStatus.CREATED,reason = "Video Created")
     @ResponseBody
     Video insertVideo(@RequestBody VideoWrapper videowrapper){
       if (repo.findByName(videowrapper.getName()) != null){
@@ -38,7 +42,7 @@ public class VideoController {
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       // se prendo il nome dalla richiesta un utente può pubblicare video con diversi nomi
       User author = user.findByEmail(authentication.getName());
-      Video video = new Video(videowrapper.getName(),author,videowrapper.getName());
+      Video video = new Video(videowrapper.getName(),author,videowrapper.getAuthor());
       return repo.save(video);
   }
   @ResponseStatus(code = HttpStatus.BAD_REQUEST,  reason = "Name of video already taken")
@@ -46,16 +50,20 @@ public class VideoController {
   }
 
   @GetMapping("/")
+  @ResponseStatus(code = HttpStatus.OK)
     @ResponseBody
-    Iterable<Video>  getVideos() { return repo.findAll();}
+    Iterable<Video>  getVideos() {
+    return repo.findAll();}
 
     @GetMapping("/{id}")
-    @ResponseBody
-    String getVideo(@PathVariable ObjectId id) {
+    ResponseEntity getVideo(@PathVariable ObjectId id) {
       if(!repo.findById(id).isPresent()){
           throw new NotExistingVideoException();
       }
-      return "OK";
+      HttpHeaders headers = new HttpHeaders();
+      headers.setLocation(URI.create("/home/simoneonesta/DSBD_Project/storage/videofiles/video.mp4"));
+      return new ResponseEntity(headers, HttpStatus.MOVED_PERMANENTLY);
+      //return new RedirectView("file:///processedVideos/"+ id.toString()+ "video.mpd" );
   }
 
       @ResponseStatus(code = HttpStatus.NOT_FOUND,  reason = "video not found")
@@ -63,8 +71,9 @@ public class VideoController {
       }
 
     @PostMapping("/{id}")
+    @ResponseStatus(code = HttpStatus.CREATED, reason = "Video Uploaded")
     @ResponseBody
-    String UploadVideo(@RequestParam("file") MultipartFile file, @PathVariable("id") ObjectId Video_id){
+    void UploadVideo(@RequestParam("file") MultipartFile file, @PathVariable("id") ObjectId Video_id){
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       if (file.isEmpty() || !repo.existsById(Video_id)) {
         throw new NoVideoFileException();
@@ -77,8 +86,7 @@ public class VideoController {
         try {
           byte[] bytes = file.getBytes();
           // Creating the directory to store file
-          String rootPath = "/home/Scrivania";
-          File dir = new File("/home/simoneonesta/Scrivania/videos/" + Video_id);
+          File dir = new File("/videos/" + Video_id);
           if (!dir.exists())
             dir.mkdirs();
           // Create the file on server
@@ -93,8 +101,13 @@ public class VideoController {
         JSONObject VideoProcessingContent = new JSONObject();
         VideoProcessingContent.put("videoId",Video_id.toString());
         JSONObject VideoProcessingResult = VideoProcessingRequest.postForObject(Videoprocessing_host,VideoProcessingContent, JSONObject.class);
-        System.out.println(VideoProcessingResult);
-        return "Video Uploaded";
+        if(VideoProcessingResult.getAsString("status").equals("ok")){
+          video.get().setStatus("Uploaded");
+          repo.save(video.get());
+        }
+        else{
+          throw new VideoProcessingException();
+        }
 
     }
   @ResponseStatus(code = HttpStatus.BAD_REQUEST,  reason = "No video found")
@@ -105,5 +118,8 @@ public class VideoController {
   }
   @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR,  reason = "Error saving video")
   class VideoFileException extends RuntimeException {
+  }
+  @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR,  reason = "Error in processing the video")
+  class VideoProcessingException extends RuntimeException {
   }
 }

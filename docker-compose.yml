@@ -14,12 +14,20 @@ services:
             MONGO_HOST: mongo
             MONGO_DBNAME: vms
             VIDEOPROCESSING_HOST: http://vps:8080/videos/process
-
+        volumes:
+         - ./storage/var/video:/app/videos
+         - ./storage/videofiles:/app/processedVideos
     mongo:
         image: mongo
         restart: always
     vps:
         image: vps
         restart: always
+        volumes:
+        - ./storage/var/video:/app/videos:ro
+        - ./storage/videofiles:/app/processedVideos
+        - ./storage:/app/script
+volumes:
+    storage:
 
             
