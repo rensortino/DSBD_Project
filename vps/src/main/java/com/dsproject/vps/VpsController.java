@@ -1,15 +1,33 @@
 package com.dsproject.vps;
 
-import net.minidev.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 
 @RestController
 @RequestMapping("/videos")
 public class VpsController {
-    public String Status;
+
+    @Value(value = "${FLASK_HOST}")
+    private String flaskHost;
+
     @PostMapping("/process")
+    @ResponseBody
+    public ResponseEntity processVideo(@RequestBody VideoIdWrapper videoId) {
+        RestTemplate req = new RestTemplate();
+
+        try {
+            return req.postForObject(flaskHost, videoId, ResponseEntity.class);
+        }
+        catch(Exception e) {
+            return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /*
     @ResponseBody
     JSONObject processVideo(@RequestBody VideoIdWrapper Video_Folder){
 
@@ -21,9 +39,9 @@ public class VpsController {
                 try {
                     p = Videoscript.start();
                     p.waitFor();
-                    Status = "COMPLETED";
+                    status = "COMPLETED";
                 } catch (Exception e) {
-                    Status = "FAILED";
+                    status = "FAILED";
                 }
 
 
@@ -36,7 +54,7 @@ public class VpsController {
             System.out.println(e);
             throw  new VideoFileException();
         }
-        if(this.Status.equals("FAILED")){
+        if(this.status.equals("FAILED")){
             System.out.println("errore esecuzione script");
             throw  new VideoFileException();
         }
@@ -46,7 +64,7 @@ public class VpsController {
         response.put("status","ok");
         return response;
     }
-
+    */
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR,  reason = "Error in video's script")
     class VideoFileException extends RuntimeException {
     }

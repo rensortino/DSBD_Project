@@ -28,6 +28,8 @@ services:
             - ./storage/var/video:/app/videos:ro
             - ./storage/videofiles:/app/processedVideos
             - ./storage:/app/script
+        environment:
+            FLASK_HOST: http://video_processor:5000
 
     gateway:
         image: apigateway

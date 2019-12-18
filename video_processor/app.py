@@ -1,11 +1,13 @@
 from flask import Flask
+from flask import request
 app = Flask(__name__)
 
 import os
 
-@app.route('/')
+@app.route('/', methods=["POST"])
 def execute_script():
-    os.system('bash process_video.sh')
+    videoId = request.get_json()['videoId'];
+    os.system('bash process_video.sh ' + videoId)
 
 
 if __name__ == '__main__':
