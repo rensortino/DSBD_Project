@@ -1,7 +1,6 @@
 package com.dsproject.vms.controller;
 
 import com.dsproject.vms.model.User;
-import com.dsproject.vms.model.UserRepository;
 import com.dsproject.vms.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

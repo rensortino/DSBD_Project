@@ -57,7 +57,7 @@ public class VideoService {
             throw new NotExistingVideoException();
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/videofiles/" + id.toString() + "/video.mp4"));
+        headers.setLocation(URI.create("/videofiles/" + id.toString() + "/video.mpd"));
         return new ResponseEntity(headers, HttpStatus.MOVED_PERMANENTLY);
         //return new RedirectView("file:///processedVideos/"+ id.toString()+ "video.mpd" );
     }
@@ -90,11 +90,12 @@ public class VideoService {
         }
         JSONObject VideoProcessingContent = new JSONObject();
         VideoProcessingContent.put("videoId", Video_id.toString());
-        JSONObject VideoProcessingResult = VideoProcessingRequest.postForObject(videoProcessingHost, VideoProcessingContent, JSONObject.class);
-        if (VideoProcessingResult.getAsString("status").equals("ok")) {
+        ResponseEntity VideoProcessingResult = VideoProcessingRequest.postForObject(videoProcessingHost, VideoProcessingContent, ResponseEntity.class);
+        if (VideoProcessingResult.getStatusCodeValue() == 201) {
             video.get().setStatus("Uploaded");
             videoRepo.save(video.get());
         } else {
+            System.out.println("porcodio");
             throw new VideoProcessingException();
         }
     }

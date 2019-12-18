@@ -48,7 +48,7 @@ services:
             - "5000:5000"
         volumes:
             - ./storage/var/video:/app/videos
-            - ./storage/videoiles:/app/processedVideos
+            - ./storage/videofiles:/app/processedVideos
 volumes:
     storage:
 
