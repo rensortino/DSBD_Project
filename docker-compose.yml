@@ -46,6 +46,8 @@ services:
         image: video_processor
         ports:
             - "5000:5000"
+        environment:
+            - PYTHONUNBUFFERED=0
         volumes:
             - ./storage/var/video:/app/videos
             - ./storage/videofiles:/app/processedVideos

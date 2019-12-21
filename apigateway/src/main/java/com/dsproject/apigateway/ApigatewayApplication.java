@@ -26,7 +26,7 @@ public class ApigatewayApplication {
                         .uri(vms)
         ).route(
                 p ->p.path("/videofiles/**")
-                    .filters(f-> f.rewritePath("/videofiles/(?<video>.*)","/${video}"))
+                    .filters(f-> f.rewritePath("/videofiles/(?<video>.*)/video.mpd","/${video}"))
                         .uri("file:///")
                     )
                 .build();

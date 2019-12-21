@@ -1,10 +1,13 @@
 package com.dsproject.vps;
 
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.net.http.HttpResponse;
 
 
 @RestController
@@ -17,12 +20,21 @@ public class VpsController {
     @PostMapping("/process")
     @ResponseBody
     public ResponseEntity processVideo(@RequestBody VideoIdWrapper videoId) {
+        System.out.println("***VPS Received POST***");
         RestTemplate req = new RestTemplate();
 
         try {
-            return req.postForObject(flaskHost, videoId, ResponseEntity.class);
+            System.out.println("***Forwarding POST***");
+            JSONObject reqBody = new JSONObject();
+            reqBody.put("videoId", videoId.getVideo_id());
+            ResponseEntity<String> res = req.postForEntity(flaskHost, reqBody, String.class);
+            System.out.println(res);
+            System.out.println(res.getStatusCode().value());
+            return new ResponseEntity<String>(HttpStatus.CREATED);
         }
         catch(Exception e) {
+            System.out.println("***DEAD***");
+            System.out.println(e);
             return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

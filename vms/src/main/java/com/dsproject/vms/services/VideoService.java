@@ -63,12 +63,12 @@ public class VideoService {
     }
 
     @ResponseBody
-    public void uploadVideo(MultipartFile file, ObjectId Video_id) {
+    public Video uploadVideo(MultipartFile file, ObjectId videoId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (file.isEmpty() || !videoRepo.existsById(Video_id)) {
+        if (file.isEmpty() || !videoRepo.existsById(videoId)) {
             throw new NoVideoFileException();
         }
-        Optional<Video> video = videoRepo.findById(Video_id);
+        Optional<Video> video = videoRepo.findById(videoId);
         if (!video.get().getAuthor().getEmail().equals(authentication.getName())) {
             throw new NoUserMatchException();
         }
@@ -76,7 +76,7 @@ public class VideoService {
         try {
             byte[] bytes = file.getBytes();
             // Creating the directory to store file
-            File dir = new File("/videos/" + Video_id);
+            File dir = new File("/app/videos/" + videoId);
             if (!dir.exists())
                 dir.mkdirs();
             // Create the file on server
@@ -89,13 +89,13 @@ public class VideoService {
             throw new VideoFileException();
         }
         JSONObject VideoProcessingContent = new JSONObject();
-        VideoProcessingContent.put("videoId", Video_id.toString());
+        VideoProcessingContent.put("videoId", videoId.toString());
         ResponseEntity VideoProcessingResult = VideoProcessingRequest.postForObject(videoProcessingHost, VideoProcessingContent, ResponseEntity.class);
-        if (VideoProcessingResult.getStatusCodeValue() == 201) {
+        System.out.println(VideoProcessingResult);
+        if (VideoProcessingResult.getStatusCode().is2xxSuccessful()) {
             video.get().setStatus("Uploaded");
-            videoRepo.save(video.get());
+            return videoRepo.save(video.get());
         } else {
-            System.out.println("porcodio");
             throw new VideoProcessingException();
         }
     }

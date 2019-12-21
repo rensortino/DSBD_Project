@@ -17,8 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class VideoController {
 
 
-  @Value(value = "${GATEWAY_HOST}")
-  private String Gateway_host;
+    @Value(value = "${GATEWAY_HOST}")
+    private String Gateway_host;
 
     @Autowired
     VideoService videoService;
@@ -27,27 +27,26 @@ public class VideoController {
     @ResponseStatus(code = HttpStatus.CREATED,reason = "Video Created")
     @ResponseBody
     public Video insertVideo(@RequestBody VideoWrapper videoWrapper) {
-      return videoService.insertVideo(videoWrapper);
+        return videoService.insertVideo(videoWrapper);
     }
 
-  @GetMapping("/")
-  @ResponseStatus(code = HttpStatus.OK)
+    @GetMapping("/")
+    @ResponseStatus(code = HttpStatus.OK)
     @ResponseBody
     Iterable<Video>  getVideos() {
-      return videoService.getVideos();
+        return videoService.getVideos();
     }
 
     @GetMapping("/{id}")
     ResponseEntity getVideo(@PathVariable ObjectId id) {
-      return videoService.getVideo(id);
+        return videoService.getVideo(id);
     }
 
     @PostMapping("/{id}")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "Video Uploaded")
     @ResponseBody
-    void uploadVideo(@RequestParam("file") MultipartFile file, @PathVariable("id") ObjectId id){
-      videoService.uploadVideo(file, id);
-      return;
+    Video uploadVideo(@RequestParam("file") MultipartFile file, @PathVariable("id") ObjectId id){
+        return videoService.uploadVideo(file, id);
     }
 
 }
