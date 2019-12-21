@@ -11,7 +11,7 @@ services:
         environment:
             MONGO_HOST: mongo
             MONGO_DBNAME: vms
-            VIDEOPROCESSING_HOST: http://vps:8080/videos/process
+            VIDEOPROCESSING_HOST: http://vps:5000
             GATEWAY_HOST: http://gateway:8080
         volumes:
             - ./storage/var/video:/app/videos
@@ -20,16 +20,6 @@ services:
     mongo:
         image: mongo
         restart: always
-
-    vps:
-        image: vps
-        restart: always
-        volumes:
-            - ./storage/var/video:/app/videos:ro
-            - ./storage/videofiles:/app/processedVideos
-            - ./storage:/app/script
-        environment:
-            FLASK_HOST: http://video_processor:5000
 
     gateway:
         image: apigateway
@@ -40,12 +30,10 @@ services:
         environment:
             VMS_HOST: http://vms:8080
         volumes:
-            - ./storage/var/video:/app/var/videofiles
+            - ./storage/videofiles:/app/videofiles
 
-    video_processor:
+    vps:
         image: video_processor
-        ports:
-            - "5000:5000"
         environment:
             - PYTHONUNBUFFERED=0
         volumes:

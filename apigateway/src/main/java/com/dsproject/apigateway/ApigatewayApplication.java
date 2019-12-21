@@ -1,5 +1,6 @@
 package com.dsproject.apigateway;
 
+import io.prometheus.client.spring.boot.EnableSpringBootMetricsCollector;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,8 +27,7 @@ public class ApigatewayApplication {
                         .uri(vms)
         ).route(
                 p ->p.path("/videofiles/**")
-                    .filters(f-> f.rewritePath("/videofiles/(?<video>.*)/video.mpd","/${video}"))
-                        .uri("file:///")
+                        .uri("file:///videofiles/")
                     )
                 .build();
     }

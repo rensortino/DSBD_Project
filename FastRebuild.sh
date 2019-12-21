@@ -1,7 +1,5 @@
 cd vms
 sudo docker build -t vms .
-cd ../vps
-sudo docker build -t vps .
 cd ../apigateway
 sudo docker build -t apigateway .
 cd ../video_processor

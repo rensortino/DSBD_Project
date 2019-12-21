@@ -10,7 +10,7 @@ def execute_script():
     videoId = request.json['videoId']
     status = os.system('npm start ' + videoId)
     if status == 0:
-        return jsonify({"error": "Invalid email"}), 201
+        return jsonify(status = "Success")
     return jsonify({"error": "Invalid email"}), 500
 
 

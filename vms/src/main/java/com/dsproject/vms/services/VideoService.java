@@ -90,8 +90,8 @@ public class VideoService {
         }
         JSONObject VideoProcessingContent = new JSONObject();
         VideoProcessingContent.put("videoId", videoId.toString());
-        ResponseEntity VideoProcessingResult = VideoProcessingRequest.postForObject(videoProcessingHost, VideoProcessingContent, ResponseEntity.class);
-        System.out.println(VideoProcessingResult);
+        ResponseEntity<JSONObject> VideoProcessingResult = VideoProcessingRequest.postForEntity(videoProcessingHost, VideoProcessingContent, JSONObject.class);
+        System.out.println(VideoProcessingResult.getStatusCodeValue());
         if (VideoProcessingResult.getStatusCode().is2xxSuccessful()) {
             video.get().setStatus("Uploaded");
             return videoRepo.save(video.get());
