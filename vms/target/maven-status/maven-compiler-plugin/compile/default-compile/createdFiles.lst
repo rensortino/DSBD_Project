@@ -4,7 +4,7 @@ com/dsproject/vms/services/UserService.class
 com/dsproject/vms/model/VideoRepository.class
 com/dsproject/vms/exceptions/ExistingVideoNameException.class
 com/dsproject/vms/services/VideoService.class
-com/dsproject/vms/exceptions/NotExistingVideoException.class
 com/dsproject/vms/exceptions/NoUserMatchException.class
+com/dsproject/vms/exceptions/NotExistingVideoException.class
 com/dsproject/vms/exceptions/VideoProcessingException.class
 com/dsproject/vms/exceptions/VideoFileException.class
