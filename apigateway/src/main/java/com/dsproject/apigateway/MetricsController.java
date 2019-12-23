@@ -19,8 +19,8 @@ public class MetricsController {
 
     public MetricsController(PrometheusMeterRegistry meterRegistry) {
         myCounter = Counter
-                .builder("mycustomcounter")
-                .description("this is my custom counter")
+                .builder("pippo")
+                .description("vms Get Couter")
                 .register(meterRegistry);
         myTimer = Timer.builder("MyTimer").register(meterRegistry);
     }

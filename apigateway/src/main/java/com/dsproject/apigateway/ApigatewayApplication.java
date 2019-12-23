@@ -30,8 +30,7 @@ public class ApigatewayApplication {
 
         return builder.routes().route(
                 p -> p.path("/vms/**")
-                        .filters(f-> f.rewritePath("/vms/(?<service>.*)","/${service}")
-                        .filter(filter.apply(new LoggingGatewayFilterFactory.Config("My Custom Message", true, true))))
+                        .filters(f-> f.rewritePath("/vms/(?<service>.*)","/${service}"))
                         .uri(vms)
         ).route(
                 p ->p.path("/videofiles/**")
