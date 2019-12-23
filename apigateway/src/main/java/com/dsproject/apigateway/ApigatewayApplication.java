@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @SpringBootApplication
 public class ApigatewayApplication {
     //@Value(value = "${VMS_HOST}")
@@ -24,14 +23,15 @@ public class ApigatewayApplication {
         SpringApplication.run(ApigatewayApplication.class, args);
     }
     @Autowired
-    MetricsController metrics;
+    LoggingGatewayFilterFactory filter;
 
     @Bean
     public RouteLocator  Gateway(RouteLocatorBuilder builder){
 
         return builder.routes().route(
                 p -> p.path("/vms/**")
-                        .filters(f-> f.rewritePath("/vms/(?<service>.*)","/${service}"))
+                        .filters(f-> f.rewritePath("/vms/(?<service>.*)","/${service}")
+                        .filter(filter.apply(new LoggingGatewayFilterFactory.Config("My Custom Message", true, true))))
                         .uri(vms)
         ).route(
                 p ->p.path("/videofiles/**")
