@@ -1,22 +1,31 @@
 package com.dsproject.apigateway;
 
+import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.micrometer.core.instrument.Timer;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
+import org.springframework.stereotype.Component;
 
-@RestController
+@Component
 public class MetricsController {
 
-    @Autowired
-    private MeterRegistry registry;
+    private final Counter myCounter;
+    private final Timer myTimer;
 
-
-    @GetMapping("/**")
-    public void count() {
-        registry.counter("Counter").increment();
-        System.out.println(registry.counter("Counter").count());
+    public MetricsController(PrometheusMeterRegistry meterRegistry) {
+        myCounter = Counter
+                .builder("mycustomcounter")
+                .description("this is my custom counter")
+                .register(meterRegistry);
+        myTimer = Timer.builder("MyTimer").register(meterRegistry);
     }
+
+    public void increment(){
+        myCounter.increment();
+
+    }
+
+
 
 
 }
