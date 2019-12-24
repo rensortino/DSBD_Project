@@ -34,8 +34,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/register").permitAll()
                 .antMatchers("/users/").authenticated()
                 .antMatchers(HttpMethod.POST,"/videos/").authenticated()
-                // DA MODIFICARE
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .csrf().disable();
 
