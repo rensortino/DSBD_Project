@@ -1,0 +1,37 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway
+spec:
+  selector:
+    matchLabels:
+      app: apigateway_pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: apigateway_pod
+    spec:
+     volumes:
+     - name: videos
+       hostPath:
+         path: /storage/videofiles
+         type: Directory
+     containers:
+     - name: apigateway
+       image: apigateway:v1
+       resources:
+        limits:
+         memory: "800Mi"
+        requests:
+         memory: "600Mi"
+       volumeMounts:
+         - mountPath: /app/videofiles
+           name: videos
+       env:
+       - name: VMS_HOST
+         value: http://vms:8080
+       ports:
+       - containerPort: 8080
+       imagePullPolicy: Never

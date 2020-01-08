@@ -1,0 +1,51 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vms
+spec:
+  selector:
+    matchLabels:
+      app: vms_pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vms_pod
+    spec:
+     volumes:
+     - name: videos
+       hostPath:
+         path: /storage/var/video
+         type: Directory
+     - name: processedvideos
+       hostPath:
+         path: /storage/videofiles
+         type: Directory
+     containers:
+     - name: vms
+       image: vms:v1
+       resources:
+        limits:
+         memory: "800Mi"
+        requests:
+         memory: "600Mi"
+       volumeMounts:
+         - mountPath: /app/videos
+           name: videos
+         - mountPath: /app/processedVideos
+           name: processedvideos
+       env:
+       - name: MONGO_HOST
+         value: mongodb
+       - name: MONGO_DBNAME
+         value: vms
+       - name: VIDEOPROCESSING_HOST
+         value: http://vps:5000
+       - name: GATEWAY_HOST
+         value: http://apigateway:8080
+       ports:
+       - containerPort: 8080
+       imagePullPolicy: Never
+      
+       

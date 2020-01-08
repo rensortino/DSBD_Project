@@ -1,0 +1,40 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vps
+spec:
+  selector:
+    matchLabels:
+      app: vps_pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vps_pod
+    spec:
+     volumes:
+     - name: videos
+       hostPath:
+         path: /storage/var/video
+         type: Directory
+     - name: processedvideos
+       hostPath:
+         path: /storage/videofiles
+         type: Directory
+     containers:
+     - name: vps
+       image: vps:v1
+       resources:
+        limits:
+         memory: "300Mi"
+        requests:
+         memory: "150Mi"
+       volumeMounts:
+         - mountPath: /app/videos
+           name: videos
+         - mountPath: /app/processedVideos
+           name: processedvideos
+       ports:
+       - containerPort: 5000
+       imagePullPolicy: Never
