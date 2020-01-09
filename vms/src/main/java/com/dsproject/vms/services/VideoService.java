@@ -1,4 +1,6 @@
 package com.dsproject.vms.services;
+import com.dsproject.vms.KafkaConsumer;
+import com.dsproject.vms.KafkaProducer;
 import com.dsproject.vms.model.*;
 import com.dsproject.vms.exceptions.*;
 
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
@@ -63,7 +66,10 @@ public class VideoService {
     }
 
     @ResponseBody
+    @Transactional
     public Video uploadVideo(MultipartFile file, ObjectId videoId) {
+        KafkaProducer kafkaProducer = new KafkaProducer();
+        KafkaConsumer kafkaConsumer = new KafkaConsumer();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (file.isEmpty() || !videoRepo.existsById(videoId)) {
             throw new NoVideoFileException();
@@ -88,6 +94,12 @@ public class VideoService {
         } catch (Exception e) {
             throw new VideoFileException();
         }
+        kafkaProducer.produceData(videoId.toString());
+        video.get().setStatus("Uploaded");
+        kafkaConsumer.retrieveData(videoId.toString());
+        return videoRepo.save(video.get());
+        // attendo la fine del processamento
+        /*
         JSONObject VideoProcessingContent = new JSONObject();
         VideoProcessingContent.put("videoId", videoId.toString());
         ResponseEntity<JSONObject> VideoProcessingResult = VideoProcessingRequest.postForEntity(videoProcessingHost, VideoProcessingContent, JSONObject.class);
@@ -98,5 +110,6 @@ public class VideoService {
         } else {
             throw new VideoProcessingException();
         }
+         */
     }
 }

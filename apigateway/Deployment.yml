@@ -14,11 +14,23 @@ spec:
         app: apigateway_pod
     spec:
      volumes:
+     - name: prometheus
+       hostPath:
+         path: /storage/prometheus/prometheus.yml
+         type: File
+         
      - name: videos
        hostPath:
          path: /storage/videofiles
          type: Directory
      containers:
+     - name: prometheus
+       image: prom/prometheus:latest
+       volumeMounts:
+        - mountPath: /etc/prometheus/prometheus.yml
+          name: prometheus
+       ports:
+       - containerPort: 9090
      - name: apigateway
        image: apigateway:v1
        resources:
@@ -35,3 +47,4 @@ spec:
        ports:
        - containerPort: 8080
        imagePullPolicy: Never
+     
