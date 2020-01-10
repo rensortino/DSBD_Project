@@ -1,6 +1,4 @@
 package com.dsproject.vms.services;
-import com.dsproject.vms.KafkaConsumer;
-import com.dsproject.vms.KafkaProducer;
 import com.dsproject.vms.model.*;
 import com.dsproject.vms.exceptions.*;
 
@@ -11,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -28,6 +28,12 @@ import java.util.Optional;
 
 @Service
 public class VideoService {
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Value(value = "${KAFKA_PROCESS_TOPIC}")
+    private String kafkaProcessTopic;
+
 
     @Autowired
     VideoRepository videoRepo;
@@ -37,6 +43,12 @@ public class VideoService {
 
     @Value(value = "${VIDEOPROCESSING_HOST}")
     private String videoProcessingHost;
+
+
+    @KafkaListener(topics = "processed")
+    public void listenKafka(String message) {
+        System.out.println("Received Messasge in group foo: " + message);
+    }
 
     @ResponseBody
     public Video insertVideo(@RequestBody VideoWrapper videowrapper) {
@@ -67,9 +79,7 @@ public class VideoService {
 
     @ResponseBody
     @Transactional
-    public Video uploadVideo(MultipartFile file, ObjectId videoId) {
-        KafkaProducer kafkaProducer = new KafkaProducer();
-        KafkaConsumer kafkaConsumer = new KafkaConsumer();
+    public String uploadVideo(MultipartFile file, ObjectId videoId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (file.isEmpty() || !videoRepo.existsById(videoId)) {
             throw new NoVideoFileException();
@@ -94,10 +104,12 @@ public class VideoService {
         } catch (Exception e) {
             throw new VideoFileException();
         }
-        kafkaProducer.produceData(videoId.toString());
+
         video.get().setStatus("Uploaded");
-        kafkaConsumer.retrieveData(videoId.toString());
-        return videoRepo.save(video.get());
+        this.kafkaTemplate.send(kafkaProcessTopic,"process|"+videoId.toString());
+        videoRepo.save(video.get());
+        return "Video Uploaded";
+
         // attendo la fine del processamento
         /*
         JSONObject VideoProcessingContent = new JSONObject();

@@ -39,13 +39,14 @@ public class VideoController {
 
     @GetMapping("/{id}")
     ResponseEntity getVideo(@PathVariable ObjectId id) {
+
         return videoService.getVideo(id);
     }
 
     @PostMapping("/{id}")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "Video Uploaded")
     @ResponseBody
-    Video uploadVideo(@RequestParam("file") MultipartFile file, @PathVariable("id") ObjectId id){
+    String uploadVideo(@RequestParam("file") MultipartFile file, @PathVariable("id") ObjectId id){
         return videoService.uploadVideo(file, id);
     }
 

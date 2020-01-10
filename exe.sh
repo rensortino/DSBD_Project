@@ -1,4 +1,5 @@
 eval $(minikube docker-env)
+kubectl apply -f ./kafka.yml
 cd MongoDB
 kubectl delete -f ./
 kubectl apply -f ./Service.yml
