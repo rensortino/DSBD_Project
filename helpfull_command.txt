@@ -1,1 +1,2 @@
 sudo minikube mount ./storage:/storage
+eval $(minikube docker-env)

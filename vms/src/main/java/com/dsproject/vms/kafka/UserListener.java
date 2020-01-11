@@ -8,6 +8,7 @@ import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Service
+@KafkaListener(topics="${KAFKA_PROCESSED_TOPIC}")
 public class UserListener {
 
     @Autowired
@@ -26,12 +28,13 @@ public class UserListener {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @Value(value = "${KAFKA_PROCESSED_TOPIC}")
-    private String mainTopic;
+    private  String kafka_processed_topic;
 
-    @KafkaListener(topics="${KAFKA_PROCESSED_TOPIC}")
+    @KafkaHandler
     public void listen(String message) {
         System.out.println(message);
-        String[] message_parts = message.split("|");
+        String[] message_parts = message.split("\\|");
+        System.out.println(message_parts[1]);
         Optional<Video> video =  repo.findById(new ObjectId(message_parts[1]));
         if(message_parts[0].equals("processed")){
 

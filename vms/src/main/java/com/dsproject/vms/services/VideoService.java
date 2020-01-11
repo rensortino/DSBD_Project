@@ -45,11 +45,6 @@ public class VideoService {
     private String videoProcessingHost;
 
 
-    @KafkaListener(topics = "processed")
-    public void listenKafka(String message) {
-        System.out.println("Received Messasge in group foo: " + message);
-    }
-
     @ResponseBody
     public Video insertVideo(@RequestBody VideoWrapper videowrapper) {
         if (videoRepo.findByName(videowrapper.getName()) != null) {

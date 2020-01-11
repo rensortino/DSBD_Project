@@ -35,6 +35,15 @@ spec:
            name: videos
          - mountPath: /app/processedVideos
            name: processedvideos
+       env:
+       - name: KAFKA_ADDRESS
+         value: kafkaa:9092
+       - name: KAFKA_PROCESS_TOPIC
+         value: process
+       - name: KAFKA_PROCESSED_TOPIC
+         value: processed
+       - name: KAFKA_GROUP_ID
+         value: "1"
        ports:
        - containerPort: 5000
        imagePullPolicy: Never
