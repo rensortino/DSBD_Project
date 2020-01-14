@@ -54,6 +54,7 @@ public class VideoService {
         // se prendo il nome dalla richiesta un utente può pubblicare video con diversi nomi
         User author = userRepo.findByEmail(authentication.getName());
         Video video = new Video(videowrapper.getName(), author, videowrapper.getAuthor());
+        video.setStatus("WaitingUpload");
         return videoRepo.save(video);
     }
 
@@ -63,7 +64,7 @@ public class VideoService {
     }
 
     public ResponseEntity getVideo(ObjectId id) {
-        if (!videoRepo.findById(id).isPresent()) {
+        if (!videoRepo.findById(id).isPresent() || !videoRepo.findById(id).get().getStatus().equals("Available") ) {
             throw new NotExistingVideoException();
         }
         HttpHeaders headers = new HttpHeaders();
@@ -83,6 +84,9 @@ public class VideoService {
         if (!video.get().getAuthor().getEmail().equals(authentication.getName())) {
             throw new NoUserMatchException();
         }
+        if (!video.get().getStatus().equals("WaitingUpload")){
+            throw new NoVideoStatusMatchException();
+        }
         RestTemplate VideoProcessingRequest = new RestTemplate();
         try {
             byte[] bytes = file.getBytes();
@@ -100,10 +104,9 @@ public class VideoService {
             throw new VideoFileException();
         }
 
-        video.get().setStatus("Uploaded");
         this.kafkaTemplate.send(kafkaProcessTopic,"process|"+videoId.toString());
         videoRepo.save(video.get());
-        return "Video Uploaded";
+        return "Video waiting for uploading";
 
         // attendo la fine del processamento
         /*

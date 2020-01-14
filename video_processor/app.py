@@ -17,13 +17,16 @@ def execute_script(videoId):
         return 0
     return 1
 
+def rollback(videoId): 
+	if videoId in os.listdir("./processedVideos"):
+		os.system("rm -r ./processedVideos/" + videoId)
+
 def produce_message(producer,message):
-	
-	
 	future = producer.send(os.environ['KAFKA_PROCESSED_TOPIC'], message)
 	try:
 		record_metadata = future.get(timeout=10)
 	except Exception:
+		rollback()
 		log.exception()
 	logging.info (record_metadata.topic)
 	logging.info (record_metadata.partition)
@@ -50,10 +53,12 @@ if __name__ == '__main__':
 	for msg in consumer:
 		message_parts = msg.value.split('|')
 		logging.info(message_parts)
-		time.sleep(15)
+		logging.info(os.listdir("./processedVideos"))
+		
 		if execute_script(message_parts[1]) == 0:
 			produce_message(producer,"processed|" + message_parts[1])
 		else:
+			rollback(message_parts[1])
 			produce_message(producer,"processingFailed|" + message_parts[1])
 		
 		

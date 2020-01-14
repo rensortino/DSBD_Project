@@ -6,6 +6,7 @@ metadata:
   labels:
     app: kafkaa
 spec:
+  type: LoadBalancer
   ports:
   - port: 9092
     name: plaintext

@@ -20,5 +20,9 @@ kubectl delete -f ./
 docker build -t vps:v1 .
 kubectl apply -f ./Service.yml
 kubectl apply -f ./Deployment.yml
+cd ../spout
+kubectl delete -f ./
+docker build -t spout:v1 .
+kubectl apply -f .
 cd ..
 

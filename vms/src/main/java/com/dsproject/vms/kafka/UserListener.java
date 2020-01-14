@@ -12,6 +12,7 @@ import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @KafkaListener(topics="${KAFKA_PROCESSED_TOPIC}")
+@Transactional
 public class UserListener {
 
     @Autowired

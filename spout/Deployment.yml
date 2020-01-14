@@ -1,0 +1,36 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spout
+spec:
+  selector:
+    matchLabels:
+      app: spout_pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: spout_pod
+    spec:
+     volumes:
+     - name: stats
+       hostPath:
+         path: /storage/stats
+         type: Directory
+     containers:
+     - name: spout
+       image: spout:v1
+       volumeMounts:
+         - mountPath: /app/stats
+           name: stats
+       env:
+       - name: PROMETHEUS_ADDRESS
+         value: http://apigateway:9090
+       - name: KAFKA_ADDRESS
+         value: kafkaa:9092
+       - name: KAFKA_STATS_TOPIC
+         value: stats
+       ports:
+       - containerPort: 8080
+       imagePullPolicy: Never

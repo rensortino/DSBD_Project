@@ -2,6 +2,7 @@ com/dsproject/vms/exceptions/NoVideoFileException.class
 com/dsproject/vms/configuration/KafkaConsumerConfig.class
 com/dsproject/vms/kafka/UserListener.class
 com/dsproject/vms/services/VideoService.class
+com/dsproject/vms/exceptions/NoVideoStatusMatchException.class
 com/dsproject/vms/configuration/KafkaTopicConfig.class
 com/dsproject/vms/AuthService.class
 com/dsproject/vms/ApplicationConfiguration.class

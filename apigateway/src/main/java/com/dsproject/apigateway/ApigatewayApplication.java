@@ -30,7 +30,7 @@ public class ApigatewayApplication {
 
         return builder.routes().route(
                 p -> p.path("/vms/**")
-                        .filters(f-> f.rewritePath("/vms/(?<service>.*)","/${service}"))
+                        .filters(f-> f.rewritePath("/vms/(?<service>.*)","/${service}").)
                         .uri(vms)
         ).route(
                 p ->p.path("/videofiles/**")
@@ -41,3 +41,6 @@ public class ApigatewayApplication {
 
 
 }
+
+
+//.filters(f-> f.rewritePath("/vms/users/register(?<service>.*)","/${service}"))
