@@ -11,13 +11,13 @@
                     "instance": "localhost:8080",
                     "job": "apigateway",
                     "outcome": "SUCCESSFUL",
-                    "routeId": "d1d263ec-ac43-4123-b1d7-d245eb7a66b8",
+                    "routeId": "553a9011-d8e8-402a-aec9-521d945ac4c9",
                     "routeUri": "http://vms:8080",
                     "status": "OK"
                 },
                 "value": [
-                    1578992992.83,
-                    "69"
+                    1579024119.66,
+                    "1"
                 ]
             },
             {
@@ -28,13 +28,13 @@
                     "instance": "localhost:8080",
                     "job": "apigateway",
                     "outcome": "SUCCESSFUL",
-                    "routeId": "d1d263ec-ac43-4123-b1d7-d245eb7a66b8",
+                    "routeId": "553a9011-d8e8-402a-aec9-521d945ac4c9",
                     "routeUri": "http://vms:8080",
                     "status": "CREATED"
                 },
                 "value": [
-                    1578992992.83,
-                    "1"
+                    1579024119.66,
+                    "3"
                 ]
             }
         ]
@@ -52,12 +52,12 @@
                     "instance": "localhost:8080",
                     "job": "apigateway",
                     "outcome": "SUCCESSFUL",
-                    "routeId": "d1d263ec-ac43-4123-b1d7-d245eb7a66b8",
+                    "routeId": "553a9011-d8e8-402a-aec9-521d945ac4c9",
                     "routeUri": "http://vms:8080",
                     "status": "OK"
                 },
                 "value": [
-                    1578992992.84,
+                    1579024119.683,
                     "0"
                 ]
             },
@@ -69,12 +69,12 @@
                     "instance": "localhost:8080",
                     "job": "apigateway",
                     "outcome": "SUCCESSFUL",
-                    "routeId": "d1d263ec-ac43-4123-b1d7-d245eb7a66b8",
+                    "routeId": "553a9011-d8e8-402a-aec9-521d945ac4c9",
                     "routeUri": "http://vms:8080",
                     "status": "CREATED"
                 },
                 "value": [
-                    1578992992.84,
+                    1579024119.683,
                     "0"
                 ]
             }
@@ -93,13 +93,13 @@
                     "instance": "localhost:8080",
                     "job": "apigateway",
                     "outcome": "SUCCESSFUL",
-                    "routeId": "d1d263ec-ac43-4123-b1d7-d245eb7a66b8",
+                    "routeId": "553a9011-d8e8-402a-aec9-521d945ac4c9",
                     "routeUri": "http://vms:8080",
                     "status": "OK"
                 },
                 "value": [
-                    1578992992.85,
-                    "14.577584881"
+                    1579024119.694,
+                    "0.234978381"
                 ]
             },
             {
@@ -110,13 +110,13 @@
                     "instance": "localhost:8080",
                     "job": "apigateway",
                     "outcome": "SUCCESSFUL",
-                    "routeId": "d1d263ec-ac43-4123-b1d7-d245eb7a66b8",
+                    "routeId": "553a9011-d8e8-402a-aec9-521d945ac4c9",
                     "routeUri": "http://vms:8080",
                     "status": "CREATED"
                 },
                 "value": [
-                    1578992992.85,
-                    "0.691263243"
+                    1579024119.694,
+                    "1.826430449"
                 ]
             }
         ]
@@ -133,12 +133,12 @@
                     "instance": "localhost:8080",
                     "job": "apigateway",
                     "outcome": "SUCCESSFUL",
-                    "routeId": "d1d263ec-ac43-4123-b1d7-d245eb7a66b8",
+                    "routeId": "553a9011-d8e8-402a-aec9-521d945ac4c9",
                     "routeUri": "http://vms:8080",
                     "status": "OK"
                 },
                 "value": [
-                    1578992992.859,
+                    1579024119.703,
                     "0"
                 ]
             },
@@ -149,12 +149,12 @@
                     "instance": "localhost:8080",
                     "job": "apigateway",
                     "outcome": "SUCCESSFUL",
-                    "routeId": "d1d263ec-ac43-4123-b1d7-d245eb7a66b8",
+                    "routeId": "553a9011-d8e8-402a-aec9-521d945ac4c9",
                     "routeUri": "http://vms:8080",
                     "status": "CREATED"
                 },
                 "value": [
-                    1578992992.859,
+                    1579024119.703,
                     "0"
                 ]
             }
