@@ -5,7 +5,6 @@ metadata:
   labels:
     svc: vps
 spec:
-  type: LoadBalancer
   ports:
   - port: 5000
     protocol: TCP

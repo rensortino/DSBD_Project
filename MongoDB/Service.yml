@@ -5,7 +5,6 @@ metadata:
   labels:
     svc: mongodb
 spec:
-  type: LoadBalancer
   ports:
   - port: 27017
     protocol: TCP

@@ -26,7 +26,8 @@ public class ApigatewayApplication {
     @Value(value = "${VMS_HOST}")
     private String vms;
 
-    vmsRequestFilter filter = new vmsRequestFilter();
+    vmsRequestFilter filter_vms = new vmsRequestFilter();
+    videoFilesRequestFilter filter_videofiles = new videoFilesRequestFilter();
 
     @Autowired
     MetricsController metrics;
@@ -38,10 +39,11 @@ public class ApigatewayApplication {
         return builder.routes().route(
                 p -> p.path("/vms/**")
                         .filters(f-> f.rewritePath("/vms/(?<service>.*)","/${service}")
-                        .filter(filter.apply(new vmsRequestFilter.Config(metrics))))
+                        .filter(filter_vms.apply(new vmsRequestFilter.Config(metrics))))
                         .uri(vms)
         ).route(
                 p ->p.path("/videofiles/**")
+                        .filters(f ->f.filter(filter_videofiles.apply(new videoFilesRequestFilter.Config(metrics))))
                         .uri("file:///videofiles/")
                     )
                 .build();

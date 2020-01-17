@@ -5,7 +5,6 @@ metadata:
   labels:
     svc: vms
 spec:
-  type: LoadBalancer
   ports:
   - port: 8080
     protocol: TCP

@@ -31,13 +31,13 @@ public class MetricsController {
 
     public MetricsController(PrometheusMeterRegistry meterRegistry) {
 
-        request_counter = Counter.builder("request_counter").register(meterRegistry);
+        request_counter = Counter.builder("request_counter").tag("URI","all").register(meterRegistry);
         users_register_timer = Timer.builder("users_register_timer").tag("method","POST").tag("URI","http://vms:8080/users/register").register(meterRegistry);
         users_get_timer = Timer.builder("user_get_timer").tag("method","GET").tag("URI","http://vms:8080/users/").register(meterRegistry);
         videos_post = Timer.builder("videos_post").tag("method","POST").tag("URI","http://vms:8080/videos/").register(meterRegistry);
         videos_post_id = Timer.builder("videos_post_id").tag("method","POST").tag("URI","http://vms:8080/videos/{id}").register(meterRegistry);
         videos_get = Timer.builder("videos_get").tag("method","GET").tag("URI","http://vms:8080/videos/").register(meterRegistry);
-        videos_get_id = Timer.builder("videos_get_id").tag("method","GET").tag("URI","http://vms:8080/video/{id}").register(meterRegistry);
+        videos_get_id = Timer.builder("videos_get_id").tag("method","GET").tag("URI","http://vms:8080/videos/{id}").register(meterRegistry);
         videofiles_get_id = Timer.builder("videofiles_get_id").tag("method","GET").tag("URI","http://videofiles/{id}/video.mpd").register(meterRegistry);
         requests_size = DistributionSummary.builder("request.size").register(meterRegistry);
         response_size = DistributionSummary.builder("response.size").register(meterRegistry);
