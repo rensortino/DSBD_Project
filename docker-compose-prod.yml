@@ -1,11 +1,11 @@
 version: '3'
 services:
     vms:
-        build:
-            context: ./vms
-            dockerfile: Dockerfile-dev
+        image: vms
         restart: always
         depends_on: 
+            - mongo
+        links:
             - mongo
             - vps
         environment:
@@ -22,10 +22,8 @@ services:
         restart: always
 
     gateway:
-        build:
-            context: ./apigateway
-            dockerfile: Dockerfile-dev
-        depends_on: 
+        image: apigateway
+        links: 
             - vms
         ports:
             - "8080:8080"
@@ -35,9 +33,7 @@ services:
             - ./storage/videofiles:/app/videofiles
 
     vps:
-        build:
-            context: ./video_processor
-            dockerfile: Dockerfile-dev
+        image: video_processor
         environment:
             - PYTHONUNBUFFERED=0
         volumes:
@@ -51,7 +47,7 @@ services:
             - '--config.file=/etc/prometheus/prometheus.yml'
        ports:
             - "9090:9090"
-       depends_on:
+       links:
             - gateway
 volumes:
     storage:
