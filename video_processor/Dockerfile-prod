@@ -1,6 +1,6 @@
 FROM python:3
 COPY ./ ./app/
-RUN pip install -r requirements.txt && \
+RUN pip install Flask && \
 	apt-get update && \
 	apt-get -y install curl gnupg && \
 	curl -sL https://deb.nodesource.com/setup_11.x  | bash - && \

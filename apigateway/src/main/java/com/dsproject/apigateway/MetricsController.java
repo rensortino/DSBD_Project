@@ -6,7 +6,7 @@ import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -17,32 +17,46 @@ public class MetricsController {
 
 
 
-    public final Timer users_register_timer;
-    public final Timer users_get_timer;
-    public final Timer videos_post;
-    public final Timer videos_post_id;
-    public final Timer videos_get;
-    public final Timer videos_get_id;
-    public final Counter request_counter;
-    public final Timer videofiles_get_id;
-    public final DistributionSummary requests_size;
-    public final DistributionSummary response_size;
-    public final Counter error_counter;
 
-    public MetricsController(PrometheusMeterRegistry meterRegistry) {
+    private final Counter request_counter;
+    private final DistributionSummary requests_size;
+    private final DistributionSummary response_size;
+    private final Counter error_counter;
+    private   Timer Request_Time;
+    private final PrometheusMeterRegistry meterRegistry;
+
+    public MetricsController( PrometheusMeterRegistry meterRegistry) {
 
         request_counter = Counter.builder("request_counter").tag("URI","all").register(meterRegistry);
-        users_register_timer = Timer.builder("users_register_timer").tag("method","POST").tag("URI","http://vms:8080/users/register").register(meterRegistry);
-        users_get_timer = Timer.builder("user_get_timer").tag("method","GET").tag("URI","http://vms:8080/users/").register(meterRegistry);
-        videos_post = Timer.builder("videos_post").tag("method","POST").tag("URI","http://vms:8080/videos/").register(meterRegistry);
-        videos_post_id = Timer.builder("videos_post_id").tag("method","POST").tag("URI","http://vms:8080/videos/{id}").register(meterRegistry);
-        videos_get = Timer.builder("videos_get").tag("method","GET").tag("URI","http://vms:8080/videos/").register(meterRegistry);
-        videos_get_id = Timer.builder("videos_get_id").tag("method","GET").tag("URI","http://vms:8080/videos/{id}").register(meterRegistry);
-        videofiles_get_id = Timer.builder("videofiles_get_id").tag("method","GET").tag("URI","http://videofiles/{id}/video.mpd").register(meterRegistry);
         requests_size = DistributionSummary.builder("request.size").register(meterRegistry);
         response_size = DistributionSummary.builder("response.size").register(meterRegistry);
         error_counter = Counter.builder("error_counter").register(meterRegistry);
+        this.meterRegistry = meterRegistry;
 
+    }
+
+    public void setRequest_Time(String Uri, String method) {
+        Request_Time =Timer.builder("time_request").tag("URI",Uri).tag("method",method).register(meterRegistry);
+    }
+
+    public Counter getRequest_counter() {
+        return request_counter;
+    }
+
+    public DistributionSummary getRequests_size() {
+        return requests_size;
+    }
+
+    public DistributionSummary getResponse_size() {
+        return response_size;
+    }
+
+    public Counter getError_counter() {
+        return error_counter;
+    }
+
+    public Timer getRequest_Time() {
+        return Request_Time;
     }
 }
 

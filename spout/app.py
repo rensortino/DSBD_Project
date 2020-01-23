@@ -9,8 +9,7 @@ from kafka import KafkaProducer
 
 
 http_address = os.environ['PROMETHEUS_ADDRESS']+"/api/v1/query"
-params = [{'query':'user_get_timer_seconds_sum'},{'query':'users_register_timer_seconds_sum'},{'query':'videofiles_get_id_seconds_sum'},{'query':'videos_get_id_seconds_sum'},
-{'query':'videos_get_seconds_sum'},{'query':'videos_post_id_seconds_sum'},{'query':'videos_post_seconds_sum'},{'query':'rate(request_counter_total[10s])'},]
+params = [{'query':'time_request_seconds_sum'},{'query':'request_counter_total'}]
 producer = KafkaProducer(bootstrap_servers=os.environ['KAFKA_ADDRESS'],value_serializer=lambda x:x.encode('utf-8'))
 logging.basicConfig(level=logging.INFO)
 kafkastatsprev = ""
@@ -20,12 +19,13 @@ while 1:
         r = requests.get(http_address,params = param)
 
         for result in r.json()['data']['result']:
-            if "__name__" not in result["metric"]:
-                name = "requestPerSeconds"
-            else:
-                name = result["metric"]["__name__"]
-            kafkaStats += 'name:'+name+'|uri:'+result['metric']['URI']+'|value:'+result['value'][1]+','
+            logging.info(result)    
+            name = result["metric"]["__name__"]
+            kafkaStats += 'name:'+name+'|uri:'+result['metric']['URI']+'|value:'+result['value'][1] + ','
+        logging.info(kafkaStats)
     if(kafkaStats != kafkastatsprev): 
+        with open("./stats/stats.txt","a") as out:
+            out.write(kafkaStats)
         producer.send(os.environ['KAFKA_STATS_TOPIC'], kafkaStats)
         logging.info(kafkaStats)
     kafkastatsprev = kafkaStats

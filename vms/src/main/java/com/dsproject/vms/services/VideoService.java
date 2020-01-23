@@ -44,6 +44,9 @@ public class VideoService {
     @Value(value = "${VIDEOPROCESSING_HOST}")
     private String videoProcessingHost;
 
+    @Value(value = "${GATEWAY_HOST}")
+    private String apiGateway;
+
 
     @ResponseBody
     public Video insertVideo(@RequestBody VideoWrapper videowrapper) {
