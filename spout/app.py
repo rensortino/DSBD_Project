@@ -9,7 +9,7 @@ from kafka import KafkaProducer
 
 
 http_address = os.environ['PROMETHEUS_ADDRESS']+"/api/v1/query"
-params = [{'query':'time_request_seconds_sum'},{'query':'request_counter_total'}]
+params = [{'query':'time_request_seconds_sum'},{'query':'time_request_seconds_count'}]
 producer = KafkaProducer(bootstrap_servers=os.environ['KAFKA_ADDRESS'],value_serializer=lambda x:x.encode('utf-8'))
 logging.basicConfig(level=logging.INFO)
 kafkastatsprev = ""
@@ -21,7 +21,7 @@ while 1:
         for result in r.json()['data']['result']:
             logging.info(result)    
             name = result["metric"]["__name__"]
-            kafkaStats += 'name:'+name+'|uri:'+result['metric']['URI']+'|value:'+result['value'][1] + ','
+            kafkaStats += 'name;'+name+'|uri;'+result['metric']['URI']+'|value;'+result['value'][1] + '|method;'+result['metric']['method'] + ','
         logging.info(kafkaStats)
     if(kafkaStats != kafkastatsprev): 
         with open("./stats/stats.txt","a") as out:

@@ -4,7 +4,7 @@ cd MongoDB/k8s
 kubectl delete -f ./
 kubectl apply -f .
 cd ../../vms/
-docker build -t vms:v1 -f Dockerfile-prod .
+docker build -t vms:v1 -f Dockerfile-dev .
 cd ./k8s
 kubectl delete -f ./ 
 kubectl apply -f .

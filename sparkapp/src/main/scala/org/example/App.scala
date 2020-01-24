@@ -45,22 +45,18 @@ object App {
     val stats = lines.flatMap(line =>line.split(",")).filter(stats => stats.length > 1)
       .map(stats => {
         val stat = stats.split("""\|""")
-        (stat(0).split(":")(1), stat(2).split(":")(1).toDouble)
-      }).reduceByKey((a,b) => b)//.reduceByKeyAndWindow((a,b)=> b-a , 60,30)
+        (stat(0).split(";")(1),stat(1).split(":")(1), stat(2).split(":")(1).toDouble)
+      }).foreachRDD(rdd => rdd.collect().foreach(x => println(x._1+":"+x._2 + ":" + x._3)))
 
     // estrae l'ultimo valore di ciascuna statistica
 
-      val time_avarage = stats.map(stat => (if(stat._1.contains("sum")){
-      "Response_time_sum"
-    }
-      else stat._1,
-      stat._2)).reduceByKey((a,b) => a+b)
+      //val time_avarage = stats.reduceByKey((a,b) => a+b).reduceByKeyAndWindow((a:Double,b:Double) => (b-a), Seconds(60), Seconds(30))
 
 
 
     
 
-
+/*
     time_avarage.map(stat => (
       if (stat._1.equals("Response_time_sum")) {
       "numeratore"
@@ -86,9 +82,9 @@ object App {
       }
       ).foreachRDD(rdd => rdd.collect().foreach(x => println(x._1 + ":" + x._2)))
 
-    val request_per_seconds = stats.filter(stat => !stat._1.contains("sum"))//.reduceByKeyAndWindow((a,b)=> b -a ,60,30)
+    val request_per_seconds = stats.filter(stat => !stat._1.contains("sum")).reduceByKeyAndWindow((a:Double,b:Double) => (b-a), Seconds(60), Seconds(30))
         .map(stat => (stat._1,stat._2/30))
-    
+*/
 
 
 
