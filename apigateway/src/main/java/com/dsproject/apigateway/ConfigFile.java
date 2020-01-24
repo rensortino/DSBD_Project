@@ -22,12 +22,15 @@ public class ConfigFile {
     @Bean
     public RouteLocator Gateway(RouteLocatorBuilder builder){
 
+
         return builder.routes().route(
+        	// Takes the path of the request and strips the firt part
                 p -> p.path("/vms/**")
                         .filters(f-> f.rewritePath("/vms/(?<service>.*)","/${service}"))
                         .uri(vms)
                         .id("vms")
         ) .route(
+        	// Reroutes the request to the path specified to get the file
                 p ->p.path("/videofiles/**")
                         .filters(f ->f.stripPrefix(1))
                         .uri("file:///videofiles")

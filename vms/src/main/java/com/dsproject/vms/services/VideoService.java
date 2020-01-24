@@ -50,11 +50,13 @@ public class VideoService {
 
     @ResponseBody
     public Video insertVideo(@RequestBody VideoWrapper videowrapper) {
+        // Inserts an entry in the database with the video id and the author
         if (videoRepo.findByName(videowrapper.getName()) != null) {
             throw new ExistingVideoNameException();
         }
+        // Username taken from authentication context, otherwise any user can publish a video 
+        // under a different username
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // se prendo il nome dalla richiesta un utente può pubblicare video con diversi nomi
         User author = userRepo.findByEmail(authentication.getName());
         Video video = new Video(videowrapper.getName(), author, videowrapper.getAuthor());
         video.setStatus("WaitingUpload");
@@ -67,13 +69,13 @@ public class VideoService {
     }
 
     public ResponseEntity getVideo(ObjectId id) {
+        // Returns a 301 code redirecting to the file path of the processed video
         if (!videoRepo.findById(id).isPresent() || !videoRepo.findById(id).get().getStatus().equals("Available") ) {
             throw new NotExistingVideoException();
         }
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/videofiles/" + id.toString() + "/video.mpd"));
         return new ResponseEntity(headers, HttpStatus.MOVED_PERMANENTLY);
-        //return new RedirectView("file:///processedVideos/"+ id.toString()+ "video.mpd" );
     }
 
     @ResponseBody
@@ -92,8 +94,9 @@ public class VideoService {
         }
         RestTemplate VideoProcessingRequest = new RestTemplate();
         try {
+            // Takes a stream of bytes from the file
             byte[] bytes = file.getBytes();
-            // Creating the directory to store file
+            // Creates the directory where to store videos
             File dir = new File("/app/videos/" + videoId);
             if (!dir.exists())
                 dir.mkdirs();
@@ -111,7 +114,6 @@ public class VideoService {
         videoRepo.save(video.get());
         return "Video waiting for uploading";
 
-        // attendo la fine del processamento
         /*
         JSONObject VideoProcessingContent = new JSONObject();
         VideoProcessingContent.put("videoId", videoId.toString());

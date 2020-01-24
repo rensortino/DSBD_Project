@@ -33,6 +33,7 @@ public class CustomGlobalFilter implements GlobalFilter { ;
     @Override
     public Mono<Void> filter(ServerWebExchange exchange,
                              GatewayFilterChain chain) {
+    	// Updates the metrics' fields 
         metrics.getRequest_counter().increment();
         metrics.getRequests_size().record(exchange.getRequest().getHeaders().getContentLength());
         metrics.setRequest_Time(exchange.getRequest().getURI().toString(),exchange.getRequest().getMethodValue());

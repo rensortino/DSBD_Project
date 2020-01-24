@@ -1,6 +1,6 @@
 package com.dsproject.vms.model;
 
-
+// Support class to hold the data to be stored in the database
 public class VideoWrapper {
 
     private String name;

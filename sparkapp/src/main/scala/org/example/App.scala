@@ -42,8 +42,11 @@ object App {
 
     /* TRANSFORM the inputRDD into countRDD */
     val lines = stream.map(_.value)
-    val stats = lines.flatMap(line =>line.split(",")).filter(stats => stats.length > 1)
+    val stats = lines.flatMap(line =>line.split(","))
+    // Takes only the valid fields of the statistics
+    .filter(stats => stats.length > 1)
       .map(stats => {
+      	// Reformat the stats string in a more manageable format
         val stat = stats.split("""\|""")
         (stat(0).split(";")(1),stat(1).split(":")(1), stat(2).split(":")(1).toDouble)
       }).foreachRDD(rdd => rdd.collect().foreach(x => println(x._1+":"+x._2 + ":" + x._3)))

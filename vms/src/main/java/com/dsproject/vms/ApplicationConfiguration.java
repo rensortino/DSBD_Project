@@ -39,8 +39,6 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
 
         String s = String.format("mongodb://%s:%s/%s",
                 mongoHost, mongoPort, mongoDatabase);
-
-       // String s = String.format("mongodb://localhost:27017/vms");
         return MongoClients.create(s);
     }
 

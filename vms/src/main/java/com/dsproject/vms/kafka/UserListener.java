@@ -34,16 +34,18 @@ public class UserListener {
 
     @KafkaHandler
     public void listen(String message) {
-        System.out.println(message);
         String[] message_parts = message.split("\\|");
-        System.out.println(message_parts[1]);
         Optional<Video> video =  repo.findById(new ObjectId(message_parts[1]));
         if(message_parts[0].equals("processed")){
 
+        	// The transaction executed successfully, update the video status
             video.get().setStatus("Available");
             repo.save(video.get());
         }
         else if(message_parts[0].equals("processingFailed")){
+
+        	// Transaction failed, delete the directory which was supposed to 
+        	// contain the processed video (named after the video id)
             video.get().setStatus("NotAvailable");
             repo.save(video.get());
             File dir = new File("/app/videos/" + message_parts[1]);

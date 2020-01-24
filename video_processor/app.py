@@ -11,17 +11,20 @@ import os
 
 #@app.route('/', methods=["POST"])
 def execute_script(videoId):
-    #videoId = request.json['videoId']
+    # videoId = request.json['videoId']
     status = os.system('npm start ' + videoId)
     if status == 0:
         return 0
     return 1
 
 def rollback(videoId): 
+	# Undoes the directory creation executed by the script if this fails
 	if videoId in os.listdir("./processedVideos"):
 		os.system("rm -r ./processedVideos/" + videoId)
 
 def produce_message(producer,message):
+	# Tries to produce the success message on Kafka, if it fails, it rolls back
+	#deleting the directory
 	future = producer.send(os.environ['KAFKA_PROCESSED_TOPIC'], message)
 	try:
 		record_metadata = future.get(timeout=10)
