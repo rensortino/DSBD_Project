@@ -23,3 +23,8 @@ docker build -t spout:v1 -f Dockerfile .
 cd ./k8s
 kubectl delete -f ./ 
 kubectl apply -f ./
+cd ../../alert/
+docker build -t alert:v1 -f Dockerfile .
+cd ./k8s
+kubectl delete -f ./ 
+kubectl apply -f ./
