@@ -24,13 +24,9 @@ spec:
        volumeMounts:
          - mountPath: /app/stats
            name: stats
-       env:
-       - name: PROMETHEUS_ADDRESS
-         value: http://apigateway:9090
-       - name: KAFKA_ADDRESS
-         value: kafkaa:9092
-       - name: KAFKA_STATS_TOPIC
-         value: stats
+       envFrom:
+       - configMapRef:
+           name: spout-env-file
        ports:
        - containerPort: 8080
        imagePullPolicy: Never

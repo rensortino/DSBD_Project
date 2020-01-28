@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  VMS_HOST: http://vms:8080
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"kind":"ConfigMap","apiVersion":"v1","metadata":{"name":"apigateway-env-file","creationTimestamp":null},"data":{"VMS_HOST":"http://vms:8080"}}
+  creationTimestamp: "2020-01-28T16:46:50Z"
+  name: apigateway-env-file
+  namespace: default
+  resourceVersion: "200857"
+  selfLink: /api/v1/namespaces/default/configmaps/apigateway-env-file
+  uid: c82751e3-2dc6-4f13-9296-cced86504add

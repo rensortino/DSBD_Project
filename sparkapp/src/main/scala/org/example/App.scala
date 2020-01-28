@@ -59,7 +59,7 @@ object App {
     .filter(stats => stats.length > 1)
       .map(stats => {
       	// Reformat the stats string in a more manageable format
-        //Dato che le statistiche offerte da Prometheus sono incrementali per elaborare statistiche relative al singolo batch, per ogni statistica dovremmo levare il valore della medesima del batch precendente
+        //Dato che le statistiche offerte da Prometheus sono incrementali per elaborare statistiche relative al singolo batch dovremmo effettuare la differenza tra il batch attuale e quello precedente
         // prima però dividiamo le statistiche in 2 parti: request_count e response_time_sum
         val stat = stats.split("""\|""")
         (stat(0).split(";")(1)+ "_" + stat(1).split(";")(1)+ "_" + stat(3).split(";")(1),  stat(2).split(";")(1).toDouble)
@@ -71,14 +71,18 @@ object App {
         ,stats._2)
       ).reduceByKey((a,b) => a+b).reduceByKeyAndWindow((a:Double,b:Double) => (b-a), Seconds(60), Seconds(30))
 
+    // stat rappresenta le statistiche relative al singolo batch. Da queste estraiamo le richieste al secondo e la media dei tempi di risposta. Una volta estratte le statistiche uniamo i due Dstream per eseguire
+    // la media con i 10 Batch precedenti
     val request_per_seconds = stats.filter(line => line._1.equals("request_count")).map(a => ("request_per_seconds", a._2/30))
 
-
+      // Per l'elaborazione attraverso la funzione window otteniamo una finestra di valori pari a 11 batch di cui l'undicesimo risulta essere l'attuale e i 10 precendenti sono i batch con cui andremo a confrontare le statistiche
       val elaboration = stats.reduce((a,b) => if(a._1.equals("response_time_sum") && b._1.equals("request_count")){("response_time_average",a._2 / b._2)} else {("response_time_average",b._2 / a._2)}).union(request_per_seconds)
         .window(Seconds(330), Seconds(30)).foreachRDD(rdd => {
         rdd.collect().foreach(x => println(x))
         if (rdd.collect().length == 22) {
+          // media dei tempi di risposta degli ultimo 10 batch
           var time_avarage_media: Double = 0
+          // media delle richieste al secondo degli ultimi 10 batch
           var request_per_seconds_media: Double = 0
           for (i <- 0 to rdd.collect().length - 2) {
             println(rdd.collect()(i)._1 + ":" + rdd.collect()(i)._2)
@@ -98,10 +102,14 @@ object App {
           println("ultimo tempo di risposta medio calcolato: " + rdd.collect()(20)._2)
           println("ultime richieste medie calcolate:" + rdd.collect()(21)._2)
 
+          // se valore corrente della statistica > di 1,2 * media della statistica degli ultimi 10 batch genera un alert
           if (rdd.collect()(20)._2 > (6 / 5) * time_avarage_media && rdd.collect()(21)._2 > (6 / 5) * request_per_seconds_media) {
             var aumento_perc_response_time: Double = 0
             var aumento_perc_request_per_seconds: Double = 0
 
+            // l'aumento percentuale sarà dato dalla risoluzione della seguente proporzione:
+            // media_statistiche_ultimi_10_batch : 100 = stastiche_ultimo_batch : x
+            // in questo modo otteniamo una percentuale maggiore del 100% poichè le statistiche dell'ultimo batch superano la media degli ultimi 10 batch, per ottenere l'incremento percentuale sottraiamo 100
             aumento_perc_request_per_seconds = ((rdd.collect()(21)._2 * 100) / request_per_seconds_media) - 100
 
             aumento_perc_response_time = ((rdd.collect()(20)._2 * 100) / time_avarage_media) - 100

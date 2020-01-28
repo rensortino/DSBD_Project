@@ -1,0 +1,16 @@
+apiVersion: v1
+data:
+  KAFKA_ADDRESS: kafkaa:9092
+  KAFKA_STATS_TOPIC: stats
+  PROMETHEUS_ADDRESS: http://apigateway:9090
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"kind":"ConfigMap","apiVersion":"v1","metadata":{"name":"spout-env-file","creationTimestamp":null},"data":{"KAFKA_ADDRESS":"kafkaa:9092","KAFKA_STATS_TOPIC":"stats","PROMETHEUS_ADDRESS":"http://apigateway:9090"}}
+  creationTimestamp: "2020-01-28T17:57:21Z"
+  name: spout-env-file
+  namespace: default
+  resourceVersion: "211483"
+  selfLink: /api/v1/namespaces/default/configmaps/spout-env-file
+  uid: 0b76449a-2bb4-4fc2-8f01-35aac8e0280a

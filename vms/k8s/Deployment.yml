@@ -35,23 +35,11 @@ spec:
            name: videos
          - mountPath: /app/processedVideos
            name: processedvideos
-       env:
-       - name: MONGO_HOST
-         value: mongodb
-       - name: MONGO_DBNAME
-         value: vms
-       - name: VIDEOPROCESSING_HOST
-         value: http://vps:5000
-       - name: GATEWAY_HOST
-         value: http://apigateway:8080
-       - name: KAFKA_ADDRESS
-         value: kafkaa:9092
-       - name: KAFKA_PROCESS_TOPIC
-         value: process
-       - name: KAFKA_PROCESSED_TOPIC
-         value: processed
-       - name: KAFKA_GROUP_ID
-         value: "1"
+       envFrom:
+       - configMapRef:
+            name: vms-env-file
+       - secretRef:
+           name: vms-secret-file
        ports:
        - containerPort: 8080
        imagePullPolicy: Never

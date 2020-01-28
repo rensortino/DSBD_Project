@@ -21,5 +21,8 @@ spec:
          memory: "500Mi"
         requests:
          memory: "300Mi"
+       envFrom:
+       - secretRef:
+           name: mongodb-secret-file
        ports:
        - containerPort: 27017

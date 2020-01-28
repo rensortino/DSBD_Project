@@ -29,6 +29,11 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
     @Value(value = "${MONGO_DBNAME}")
     private String mongoDatabase;
 
+    @Value(value = "${MONGO_ROOT_USERNAME}")
+    private String mongoUser;
+
+    @Value(value = "${MONGO_ROOT_PASSWORD}")
+    private String mongoPass;
 
     public ApplicationConfiguration() {
     }
@@ -37,7 +42,7 @@ public class ApplicationConfiguration extends AbstractMongoClientConfiguration {
     @Bean
     public MongoClient mongoClient() {
 
-        String s = String.format("mongodb://%s:%s/%s",
+        String s = String.format("mongodb://%s:%s@%s:%s/%s", mongoUser, mongoPass,
                 mongoHost, mongoPort, mongoDatabase);
         return MongoClients.create(s);
     }

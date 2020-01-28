@@ -41,9 +41,10 @@ spec:
        volumeMounts:
          - mountPath: /app/videofiles
            name: videos
-       env:
-       - name: VMS_HOST
-         value: http://vms:8080
+       envFrom:
+        - configMapRef:
+            name: apigateway-env-file
+       
        ports:
        - containerPort: 8080
        imagePullPolicy: Never

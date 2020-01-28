@@ -1,0 +1,24 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanagement
+spec:
+  selector:
+    matchLabels:
+      app: alertmanagement_pod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: alertmanagement_pod
+    spec:
+     containers:
+     - name: alertmanagement
+       image: alert:v1
+       envFrom:
+        - configMapRef:
+            name: alertmanagement-env-file
+       ports:
+       - containerPort: 8080
+       imagePullPolicy: Never

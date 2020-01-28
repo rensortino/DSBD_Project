@@ -1,4 +1,5 @@
 /home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/ApplicationConfiguration.java
+/home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/exceptions/NoVideoStatusMatchException.java
 /home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/configuration/KafkaConsumerConfig.java
 /home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/configuration/KafkaTopicConfig.java
 /home/simoneonesta/DSBD_Project/vms/src/main/java/com/dsproject/vms/model/VideoRepository.java
